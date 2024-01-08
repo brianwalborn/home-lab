@@ -83,7 +83,7 @@ Much like the instructions for [assigning a static IP](./static-ip-address.md), 
     ```
 4. Now, when you SSH back into the worker node, you'll be able to ping a web address instead of an IP address
     ```
-    me@one:~$ ssh me@10.4.4.3 # the IP address changed
+    me@one:~$ ssh me@two.local # access via hostname thanks to avahi-daemon
     ...
     me@two:~$ ping -c 1 stackoverflow.com
     PING stackoverflow.com (172.64.155.249) 56(84) bytes of data.
