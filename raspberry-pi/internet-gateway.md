@@ -4,11 +4,11 @@
 
 > If the nodes on your subnet have Internet access through WiFi or any other means, this guide isn't necessary.
 
-When setting up a cluster of Raspberry Pis on a subnet, I needed the head node to act as the gateway to to Internet for the worker nodes that didn't have a direct connection to the home network's gateway.
+When setting up a cluster of Raspberry Pis on a subnet, I needed the primary node to act as the gateway to to Internet for the worker nodes that didn't have a direct connection to the home network's gateway.
 
 ## `iptables` Rules
 
-We'll use `iptables` to set up a forwarding rule on the head node that will give our worker nodes Internet access.
+We'll use `iptables` to set up a forwarding rule on the primary node that will give our worker nodes Internet access.
 
 1. Uncomment the `net.ipv4.ip_forward=1` line in `/etc/sysctl.conf` and reboot
     > This also updates /proc/sys/net/ipv4/ip_forward on reboot
@@ -34,7 +34,7 @@ We'll use `iptables` to set up a forwarding rule on the head node that will give
     ```
     me@one:~$ sudo apt install iptables-persistent
     ```
-4. Now we can SSH into a client on our `10.4.4.0/24` subnet (connected to our head node's `eth0` interface) and ping IP addresses.
+4. Now we can SSH into a client on our `10.4.4.0/24` subnet (connected to our primary node's `eth0` interface) and ping IP addresses.
     ```
     me@one:~$ ssh me@10.4.4.2
     ...
@@ -57,7 +57,11 @@ We'll use `iptables` to set up a forwarding rule on the head node that will give
 
 Much like the instructions for [assigning a static IP](./static-ip-address.md), we'll use `netplan` to assign name servers to our worker node.
 
-1. Create a `netplan` file that will assign the `eth0` interface some nameservers to query
+1. First, install the `avahi-daemon`. This will allow us to connect to the worker nodes via their hostname (i.e. `ssh two.local`), which will save us from checking DHCP leases for IP addresses every time the worker nodes reboot and get assigned a new IP address. For more info on the daemon, check [this](https://linux.die.net/man/8/avahi-daemon) out.
+    ```
+    me@two:~$ sudo apt install avahi-daemon
+    ```
+2. Create a `netplan` file that will assign the `eth0` interface some nameservers to query
     ```
     me@two:~$ sudo vi /etc/netplan/80-dns-servers.yaml
     network:
@@ -70,14 +74,14 @@ Much like the instructions for [assigning a static IP](./static-ip-address.md), 
               - 8.8.8.8
               - 8.8.4.4
     ```
-2. Change file permissions to suppress warnings, generate, and apply the `netplan` configuration
-    > This will likely break your connection with the Pi but the configuration should still apply. Note that the IP address will also change if no static IP was assigned. If you followed the [DHCP server setup](./dhcp-server.md), check `/var/lib/kea/kea-leases4.csv` for the new IP address.
+3. Change file permissions to suppress warnings, generate, and apply the `netplan` configuration
+    > This will likely break your connection with the Pi but the configuration should still apply.
     ```
     me@two:~$ sudo chmod 600 /etc/netplan/80-dns-servers.yaml
     me@two:~$ sudo netplan generate
     me@two:~$ sudo netplan apply
     ```
-3. Now, when you SSH back into the worker node, you'll be able to ping a web address instead of an IP address
+4. Now, when you SSH back into the worker node, you'll be able to ping a web address instead of an IP address
     ```
     me@one:~$ ssh me@10.4.4.3 # the IP address changed
     ...

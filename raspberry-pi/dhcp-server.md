@@ -2,7 +2,7 @@
 
 ## Motivation
 
-Since my home lab has a cluster of Raspberry Pis that live on a separate subnet from my home network, I need the head node of the cluster to act as a DHCP server so it can assign IP addresses to the worker nodes. For this guide to be worthwhile, you'll want to have a [LAN switch](https://www.amazon.com/TP-Link-Compliant-Shielded-Optimization-TL-SG1005P/dp/B076HZFY3F) handy that you'll connect your head node (DHCP server) to in order to assign IP addresses to worker nodes (clients).
+Since my home lab has a cluster of Raspberry Pis that live on a separate subnet from my home network, I need the primary node of the cluster to act as a DHCP server so it can assign IP addresses to the worker nodes. For this guide to be worthwhile, you'll want to have a [LAN switch](https://www.amazon.com/TP-Link-Compliant-Shielded-Optimization-TL-SG1005P/dp/B076HZFY3F) handy that you'll connect your primary node (DHCP server) to in order to assign IP addresses to worker nodes (clients).
 
 ## Install ISC Kea
 
