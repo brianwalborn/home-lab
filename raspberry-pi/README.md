@@ -25,19 +25,9 @@ You should generally be able to follow any of these guides to accomplish their i
 
 ## System Information
 
-### Installed (Third-Party) `apt` Packages
-
-1. Primary node (`one`):
-    ```
-    me@one:~$ sudo apt install kea
-    me@one:~$ sudo apt install neofetch
-    me@one:~$ sudo apt install net-tools
-    me@one:~$ sudo apt install postgresql
-    ```
-
 ### System Information with `neofetch`
 
-Below is the `neofetch` information for each Raspberry Pi in the cluster
+Below is the `neofetch` command output for each Raspberry Pi in the cluster
 
 1. Primary node (`one`):
     ```
