@@ -77,7 +77,7 @@ When doing admin work across multiple machines, you'll often notice yourself run
     ```
 5. If you try running an elevated command with `sudo`, you'll get an error along the lines of `sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper`. To circumvent this we can create a wrapper around our `pssh` command that takes a password. We're going to call it `spssh`.
     ```
-    me@one:~$ sudo vi /usr/bin/spssh
+    me@one:~$ sudo vi /usr/local/bin/spssh
     #!/bin/bash
     if [ "$*" == "" ]; then
         echo "Please enter a command:"
@@ -88,13 +88,13 @@ When doing admin work across multiple machines, you'll often notice yourself run
     read -s -p "Password: " pass
 
     echo "$pass" | pssh -h ~/.pssh_host_file -i -x '-tt' -t 1800 -I "$*"
-    me@one:~$ sudo chmod +x /usr/bin/spssh
     ```
     - The `-x` argument lets us pass in the `-tt` `ssh` argument, which forces tty allocation
     - The `-t` argument increases the default `pssh` timeout of 30 seconds to 1800 seconds
 
-    Now we can run sudo commands on multiple nodes at once:
+    Now we can make our new command executable and run `sudo` commands on multiple nodes at once:
     ```
+    me@one:~$ sudo chmod +x /usr/local/bin/spssh
     me@one:~$ spssh sudo apt -y update
     Password: [1] 04:35:08 [SUCCESS] localhost
     [sudo] password for me:
