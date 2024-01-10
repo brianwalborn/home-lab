@@ -64,7 +64,7 @@ When doing admin work across multiple machines, you'll often notice yourself run
     [3] 03:33:25 [SUCCESS] me@three.local
     03:33:25 up  1:11,  0 user,  load average: 0.08, 0.05, 0.01
     ```
-5. Optionally, we can alias `pssh` to always include the `-h ~/.pssh_host_file` flag to save us some more keystrokes.
+    Optionally, we can alias `pssh` to always include the `-h ~/.pssh_host_file` flag to save us some more keystrokes.
     ```
     me@one:~$ echo "alias pssh=\"pssh -h ~/.pssh_host_file\"" >> ~/.bashrc && . ~/.bashrc
     me@one:~$ pssh -i hostname
@@ -74,4 +74,59 @@ When doing admin work across multiple machines, you'll often notice yourself run
     two
     [3] 04:44:01 [SUCCESS] me@three.local
     three
+    ```
+5. If you try running an elevated command with `sudo`, you'll get an error along the lines of `sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper`. To circumvent this we can create a wrapper around our `pssh` command that takes a password. We're going to call it `spssh`.
+    ```
+    me@one:~$ sudo vi /usr/bin/spssh
+    #!/bin/bash
+    if [ "$*" == "" ]; then
+        echo "Please enter a command:"
+        echo "  > usage: spssh COMMAND"
+        exit 1;
+    fi
+
+    read -s -p "Password: " pass
+
+    echo "$pass" | pssh -h ~/.pssh_host_file -i -x '-tt' -t 1800 -I "$*"
+    me@one:~$ sudo chmod +x /usr/bin/spssh
+    ```
+    - The `-x` argument lets us pass in the `-tt` `ssh` argument, which forces tty allocation
+    - The `-t` argument increases the default `pssh` timeout of 30 seconds to 1800 seconds
+
+    Now we can run sudo commands on multiple nodes at once:
+    ```
+    me@one:~$ spssh sudo apt -y update
+    Password: [1] 04:35:08 [SUCCESS] localhost
+    [sudo] password for me:
+    Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
+    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
+    Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    All packages are up to date.
+    Stderr: Connection to localhost closed.
+    [2] 04:35:09 [SUCCESS] me@two.local
+    [sudo] password for me:
+    Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
+    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
+    Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    All packages are up to date.
+    Stderr: Connection to two.local closed.
+    [3] 04:35:29 [SUCCESS] me@three.local
+    [sudo] password for me:
+    Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
+    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
+    Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    All packages are up to date.
+    Stderr: Connection to three.local closed.
     ```
