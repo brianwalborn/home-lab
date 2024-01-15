@@ -10,7 +10,7 @@ As with everything, we need to start somewhere. There are a myriad of different 
 
 ## Getting an OS onto a Pi
 
-I use the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to install Ubuntu Server onto a [Micro SD card](https://www.amazon.com/s?k=micro+sd+card).
+I use the Raspberry Pi Imager to install Ubuntu Server onto a [Micro SD card](https://www.amazon.com/s?k=micro+sd+card).
 
 1. Fire up the Imager, connect the Micro SD card to your machine, and click through. Most of it is pretty self-explanitory, but here are some notes:
 

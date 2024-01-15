@@ -8,13 +8,15 @@ You should generally be able to follow any of these guides to accomplish their i
 
 ### Cluster Setup
 
-1. [Initial setup](./initial-setup.md)
-2. [Assign a static IP address to your Pi](./static-ip-address.md)
-3. [Turn your primary node into a DHCP server](./dhcp-server.md)
-4. [Turn your primary node into an Internet gateway](./internet-gateway.md)
-5. [Turn your primary node into a DNS server for your subnet](./dns-server.md)
-6. [Use public key authentication on your worker nodes](./ssh-public-key-authentication.md)
-6. [Turn your Pi cluster into a Kubernetes cluster](./kubernetes-cluster.md)
+1. [Initial setup of the **primary** node](./initial-setup.md)
+2. [Assign a static IP address to your primary node](./static-ip-address.md)
+3. [Turn your primary node into a DHCP server for your cluster](./dhcp-server.md)
+4. [Turn your primary node into an Internet gateway for your cluster](./internet-gateway.md)
+5. [Turn your primary node into a DNS server for your cluster](./dns-server.md)
+6. [Initial setup of the **worker** nodes](./initial-setup.md)
+7. [Use public key authentication on your worker nodes](./ssh-public-key-authentication.md)
+8. [Enable parallel SSH](./parallel-ssh.md)
+9. [Turn your Pi cluster into a Kubernetes cluster](./kubernetes-cluster.md)
 
 ### Supplementary Guides
 
