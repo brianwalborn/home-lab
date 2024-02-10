@@ -27,21 +27,67 @@ You should generally be able to follow any of these guides to accomplish their i
 
 ## System Information
 
+### Lab Hardware
+
+-
+
 ### System Information with `neofetch`
 
 Below is the `neofetch` command output for each Raspberry Pi in the cluster
 
-1. Primary node (`one`):
+- Primary node (`zero`):
     ```
-    me@one
+    me@zero
     -----------
     OS: Ubuntu 23.10 aarch64
     Host: Raspberry Pi 4 Model B Rev 1.5
-    Kernel: 6.5.0-1005-raspi
+    Kernel: 6.5.0-1010-raspi
     Uptime: 1 hour, 22 mins
-    Packages: 744 (dpkg), 4 (snap)
+    Packages: 746 (dpkg), 4 (snap)
+    Shell: bash 5.2.15
+    Terminal: /dev/pts/1
+    CPU: BCM2835 (4) @ 1.800GHz
+    Memory: 205MiB / 3790MiB
+    ```
+- Worker node (`one`):
+    ```
+    me@one
+    ------
+    OS: Ubuntu 23.10 aarch64
+    Host: Raspberry Pi 4 Model B Rev 1.5
+    Kernel: 6.5.0-1005-raspi
+    Uptime: 2 hours, 30 mins
+    Packages: 732 (dpkg), 4 (snap)
     Shell: bash 5.2.15
     Terminal: /dev/pts/0
     CPU: BCM2835 (4) @ 1.800GHz
-    Memory: 260MiB / 3790MiB
+    Memory: 208MiB / 3790MiB
+    ```
+- Worker node (`two`):
+    ```
+    me@two
+    ------
+    OS: Ubuntu 23.10 aarch64
+    Host: Raspberry Pi 4 Model B Rev 1.5
+    Kernel: 6.5.0-1005-raspi
+    Uptime: 3 hours, 5 mins
+    Packages: 732 (dpkg), 4 (snap)
+    Shell: bash 5.2.15
+    Terminal: /dev/pts/0
+    CPU: BCM2835 (4) @ 1.800GHz
+    Memory: 192MiB / 3790MiB
+    ```
+- Worker node (`three`):
+    ```
+    me@three
+    --------
+    OS: Ubuntu 23.10 armv7l
+    Host: Raspberry Pi 2 Model B Rev 1.1
+    Kernel: 6.5.0-1008-raspi
+    Uptime: 7 days, 13 hours, 21 mins
+    Packages: 722 (dpkg), 4 (snap)
+    Shell: bash 5.2.15
+    Terminal: /dev/pts/0
+    CPU: BCM2835 (4) @ 900MHz
+    Memory: 268MiB / 918MiB
     ```

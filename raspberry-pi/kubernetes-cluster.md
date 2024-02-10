@@ -10,8 +10,8 @@ When it comes to lightweight Kubernetes distributions, there are many to choose 
 
 1. Create the `k3s` directory and `kubelet.config` file
     ```
-    me@one:~$ sudo mkdir -p /etc/rancher/k3s/
-    me@one:~$ sudo vi /etc/rancher/k3s/kubelet.config
+    me@zero:~$ sudo mkdir -p /etc/rancher/k3s/
+    me@zero:~$ sudo vi /etc/rancher/k3s/kubelet.config
     apiVersion: kubelet.config.k8s.io/v1beta1
     kind: KubeletConfiguration
     shutdownGracePeriod: 30s
@@ -20,20 +20,20 @@ When it comes to lightweight Kubernetes distributions, there are many to choose 
 2. Install K3s control plane on the primary node
     > For the `K3S_TOKEN` argument, I simply ran `uuid` to get a GUID, but it can be anything. Keep it handy, because we'll be using it to set up the worker nodes. If you forget it at any point, you can see it by running `sudo cat /var/lib/rancher/k3s/server/node-token`
     ```
-    me@one:~$ curl -sfL https://get.k3s.io | K3S_TOKEN='TOKEN' sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
+    me@zero:~$ curl -sfL https://get.k3s.io | K3S_TOKEN='TOKEN' sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
     ```
     The above command is installing K3s server with quite a few options that can be explored in detail [here](https://docs.k3s.io/cli/server). We're disabling `servicelb` (K3s default load balancer) and `traefik` (K3s default ingress) in favor of `metallb` and `nginx` respectively.
 3. Install Helm
     ```
-    me@one:~$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-    me@one:~$ chmod 700 get_helm.sh
-    me@one:~$ ./get_helm.sh
-    me@one:~$ rm get_helm.sh
+    me@zero:~$ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    me@zero:~$ chmod 700 get_helm.sh
+    me@zero:~$ ./get_helm.sh
+    me@zero:~$ rm get_helm.sh
     ```
 4. Create your `.kube` directory and copy the K3s config
     ```
-    me@one:~$ mkdir $HOME/.kube
-    me@one:~$ cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
+    me@zero:~$ mkdir $HOME/.kube
+    me@zero:~$ cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
     ```
 
 ## Prepare and Install K3s on the Worker Nodes
@@ -42,8 +42,8 @@ Now that our primary node is mostly set up, we need to set up each of our worker
 
 1. As with the primary, create the `k3s` directory and `kubelet.config` file
     ```
-    me@two:~$ sudo mkdir -p /etc/rancher/k3s/
-    me@two:~$ sudo vi /etc/rancher/k3s/kubelet.config
+    me@one:~$ sudo mkdir -p /etc/rancher/k3s/
+    me@one:~$ sudo vi /etc/rancher/k3s/kubelet.config
     apiVersion: kubelet.config.k8s.io/v1beta1
     kind: KubeletConfiguration
     shutdownGracePeriod: 30s
@@ -51,11 +51,11 @@ Now that our primary node is mostly set up, we need to set up each of our worker
     ```
 2. Install K3s on the worker node, filling in the IP of your primary node and token created in the previous section
     ```
-    me@two:~$ curl -sfL https://get.k3s.io | K3S_URL='https://<IP_OF_PRIMARY_NODE>:6443' K3S_TOKEN=<TOKEN> sh -s - --node-label 'node_type=worker' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
+    me@one:~$ curl -sfL https://get.k3s.io | K3S_URL='https://<IP_OF_PRIMARY_NODE>:6443' K3S_TOKEN=<TOKEN> sh -s - --node-label 'node_type=worker' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
     ```
 3. Back on the primary node, give the worker node a label
     ```
-    me@one:~$ kubectl label nodes two kubernetes.io/role=worker
+    me@zero:~$ kubectl label nodes two kubernetes.io/role=worker
     ```
 4. Follow these steps for each worker node
 
@@ -67,7 +67,7 @@ We've now got Kubernetes up and running on our primary and worker nodes! Now let
 
 1. From your primary node (it's helpful to do this in a separate terminal), run this command to get your cluster cert and key
     ```
-    me@one:~$ sudo cat .kube/k3s.yaml
+    me@zero:~$ sudo cat .kube/k3s.yaml
     ...
     client-certificate-data: ***
     client-key-data: ***

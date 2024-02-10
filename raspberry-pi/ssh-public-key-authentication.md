@@ -10,20 +10,20 @@ To enable SSH key auth, the primary node needs to have a key to advertise to the
 
 1. On the primary node of the cluster, first check to see if an SSH key already exists. If not, we'll create one.
     ```
-    me@one:~$ ls ~/.ssh/id_rsa.pub
+    me@zero:~$ ls ~/.ssh/id_rsa.pub
     # nothing's there, so we'll create one
-    me@one:~$ ssh-keygen -t rsa -C "your@emailaddress.com"
+    me@zero:~$ ssh-keygen -t rsa -C "your@emailaddress.com"
     ```
 2. Add our primary node's public key to the worker node's `~/.ssh/authorized_keys` file. We can do this with a single command, and it'll be the last time you have to enter the password to access the worker node.
     ```
-    me@one:~$ cat ~/.ssh/id_rsa.pub | ssh me@two.local -T "cat >> ~/.ssh/authorized_keys"
+    me@zero:~$ cat ~/.ssh/id_rsa.pub | ssh me@one.local -T "cat >> ~/.ssh/authorized_keys"
     ```
     Alternatively, you can use the server's IP address:
     ```
-    me@one:~$ cat ~/.ssh/id_rsa.pub | ssh me@10.4.4.2 -T "cat >> ~/.ssh/authorized_keys"
+    me@zero:~$ cat ~/.ssh/id_rsa.pub | ssh me@10.4.4.2 -T "cat >> ~/.ssh/authorized_keys"
     ```
 3. We can now SSH into our worker node without entering a password:
     ```
-    me@one:~$ ssh two.local
+    me@zero:~$ ssh one.local
     # no password required
     ```

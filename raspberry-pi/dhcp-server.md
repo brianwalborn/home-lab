@@ -10,7 +10,7 @@ There are many different options when it comes to DHCP software that can run on 
 
 1. Running the below command will install a few packages: `kea-dhcp4-server` (what we'll primarily be working with), `kea-dhcp6-server`, `kea-ctrl-agent` (a REST API service for Kea), and `kea-dhcp-ddns-server`. We'll also want to install Postgres for DHCP lease storage.
     ```
-    me@one:~$ sudo apt install kea
+    me@zero:~$ sudo apt install kea
     ```
 2. Select OK then `configured_random_password` at the prompt which will be used to authenticate with the `kea-ctrl-agent` API service. The password is stored in `/etc/kea/kea-api-password` -- to change it, run `dpkg-reconfigure kea-ctrl-agent` or simply edit the file manually.
 
@@ -22,7 +22,7 @@ For the same reason that we gave the Pi's connection to our home network a stati
 
 1. Either create or edit the existing `/etc/netplan/80-static-ip.yaml` file to add the `eth0` interface
     ```
-    me@one:~$ sudo vi /etc/netplan/80-static-ip.yaml
+    me@zero:~$ sudo vi /etc/netplan/80-static-ip.yaml
     network:
       version: 2
       renderer: networkd
@@ -46,12 +46,12 @@ For the same reason that we gave the Pi's connection to our home network a stati
     ```
 2. Apply the configuration by running
     ```
-    me@one:~$ sudo netplan generate
-    me@one:~$ sudo netplan apply
+    me@zero:~$ sudo netplan generate
+    me@zero:~$ sudo netplan apply
     ```
     Now, when running `ip addr`, you should see the static IP address reflected on the `eth0` interface
     ```
-    me@one:~$ ip addr
+    me@zero:~$ ip addr
     ...
     2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
       link/ether d8:3a:dd:3c:74:5b brd ff:ff:ff:ff:ff:ff
@@ -69,20 +69,20 @@ The first thing to be aware of is to not add a second DHCP server to your home n
 
 1. Before creating our configuration file, we first want to back up the default DHCP4 configuration file provided by Kea so we have something to rollback to in the event things go south.
     ```
-    me@one:~$ sudo mv /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.backup
-    me@one:~$ sudo vi /etc/kea/kea-dhcp4.conf
+    me@zero:~$ sudo mv /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.backup
     ```
-2. In our new `/etc/kea/kea-dhcp4.conf` file we'll add the following
+2. In a new `/etc/kea/kea-dhcp4.conf` file we'll add the following
     ```
-    me@one:~$ sudo vi /etc/kea/kea-dhcp4.conf
+    me@zero:~$ sudo vi /etc/kea/kea-dhcp4.conf
     {
       "Dhcp4": {
         "interfaces-config": {
           "interfaces": [ "eth0" ],
           "dhcp-socket-type": "raw"
         },
-        "valid-lifetime": 600,
-        "max-valid-lifetime": 7200,
+        "match-client-id": false,
+        "valid-lifetime": 86400,
+        "max-valid-lifetime": 86400,
         "subnet4": [{
           "pools": [ { "pool": "10.4.4.2-10.4.4.50" } ],
           "option-data": [{
@@ -99,11 +99,12 @@ The first thing to be aware of is to not add a second DHCP server to your home n
       }
     }
     ```
-    The above configuration results in the DHCP server listening for new clients on `eth0`, the Pi's on-board ethernet port. Each new client that gets connected will receive an IP address from the range `10.4.4.2` to `10.4.4.50`. If the client doesn't ask for a specific timeframe on its lease, the lease time will be `600` seconds with a maximum allowed lease time of `7200`. The server will also advise clients to use `10.4.4.1` as the default gateway.
+    The above configuration results in the DHCP server listening for new clients on `eth0`, the Pi's on-board ethernet port. Each new client that gets connected will receive an IP address from the range `10.4.4.2` to `10.4.4.50`. If the client doesn't ask for a specific timeframe on its lease, the lease time will be `86400` seconds (24 hours) since I won't have a lot of different devices coming and going from the network. The server will also advise clients to use `10.4.4.1` as the default gateway.
+    > I'm also setting `match-client-id` to `false` because I had two nodes with the same `client_id` which was causing them to be assigned the same IP address. This is defaulted to `true` and likely won't need to be changed. You can read more about it [here](https://kea.readthedocs.io/en/kea-1.6.1/arm/dhcp4-srv.html#using-client-identifier-and-hardware-address).
 3. To update the configuration, run `systemctl restart kea-dhcp4-server`.
-4. If the Pi that this instruction set was ran on is plugged into a switch, any additional nodes connected to the switch will receive an IP address within the specified `10.4.4.2` to `10.4.4.50` range and will show up in the `kea-leases4.csv` file
+4. If the Pi that this instruction set was ran on is plugged into an unmanaged switch, any additional nodes connected to the switch will receive an IP address within the specified `10.4.4.2` to `10.4.4.50` range and will show up in the `kea-leases4.csv` file
     ```
-    me@one:~$ cat /var/lib/kea/kea-leases4.csv
+    me@zero:~$ cat /var/lib/kea/kea-leases4.csv
     address,hwaddr,client_id,valid_lifetime,expire,subnet_id,fqdn_fwd,fqdn_rev,hostname,state,user_context
     10.4.4.2,d8:3a:dd:3c:7a:16,ff:f8:ce:1b:a1:00:02:00:00:ab:11:75:ea:8f:29:16:c2:aa:53,600,1702165203,1,0,0,two,0,
     ```
