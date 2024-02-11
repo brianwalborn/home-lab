@@ -8,7 +8,6 @@ metadata:
 spec:
   addresses:
   - 10.4.4.10-10.4.4.255
-
 ---
 # L2 configuration
 apiVersion: metallb.io/v1beta1

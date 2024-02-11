@@ -14,14 +14,15 @@ When doing admin work across multiple machines, you'll often notice yourself run
     ```
 2. Create a PSSH `host_file` to determine which servers the given command will run on:
     ```
-    me@zero.local~$ vi ~/.pssh_host_file
+    me@zero~$ vi ~/.pssh_host_file
     ```
     and enter the hosts on which to duplicate the command:
     ```
     # ~/.pssh_host_file
     localhost # if you want to include the server that's running the `pssh` command
-    me@one.local
-    me@three.local
+    one.local
+    two.local
+    three.local
     ```
     > For this to work, you'll want to have [SSH public key authentication](./ssh-public-key-authentication.md) set up to avoid the need to enter passwords for each server (including `localhost` by running `cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys`)
 3. If you run the command `pssh`, you'll notice it's not found even though we installed it:
@@ -96,34 +97,55 @@ When doing admin work across multiple machines, you'll often notice yourself run
     ```
     me@zero:~$ sudo chmod +x /usr/local/bin/spssh
     me@zero:~$ spssh sudo apt -y update
-    Password: [1] 04:35:08 [SUCCESS] localhost
+    Password: [1] 15:03:02 [SUCCESS] localhost
     [sudo] password for me:
     Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
-    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Get:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease [109 kB]
     Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
     Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Get:5 http://ports.ubuntu.com/ubuntu-ports mantic-updates/main arm64 Packages [299 kB]
+    Get:6 http://ports.ubuntu.com/ubuntu-ports mantic-updates/universe arm64 Packages [275 kB]
+    Fetched 683 kB in 2s (323 kB/s)
     Reading package lists... Done
     Building dependency tree... Done
     Reading state information... Done
     All packages are up to date.
     Stderr: Connection to localhost closed.
-    [2] 04:35:09 [SUCCESS] me@one.local
+    [2] 15:03:13 [SUCCESS] two.local
     [sudo] password for me:
     Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
-    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Get:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease [109 kB]
     Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
     Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Get:5 http://ports.ubuntu.com/ubuntu-ports mantic-updates/main arm64 Packages [299 kB]
+    Get:6 http://ports.ubuntu.com/ubuntu-ports mantic-updates/universe arm64 Packages [275 kB]
+    Fetched 683 kB in 2s (309 kB/s)
+    Reading package lists... Done
+    Building dependency tree... Done
+    Reading state information... Done
+    All packages are up to date.
+    Stderr: Connection to two.local closed.
+    [3] 15:03:14 [SUCCESS] one.local
+    [sudo] password for me:
+    Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
+    Get:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease [109 kB]
+    Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
+    Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Get:5 http://ports.ubuntu.com/ubuntu-ports mantic-updates/main arm64 Packages [299 kB]
+    Get:6 http://ports.ubuntu.com/ubuntu-ports mantic-updates/universe arm64 Packages [275 kB]
+    Fetched 683 kB in 2s (294 kB/s)
     Reading package lists... Done
     Building dependency tree... Done
     Reading state information... Done
     All packages are up to date.
     Stderr: Connection to one.local closed.
-    [3] 04:35:29 [SUCCESS] me@three.local
+    [4] 15:06:29 [SUCCESS] three.local
     [sudo] password for me:
     Hit:1 http://ports.ubuntu.com/ubuntu-ports mantic InRelease
-    Hit:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease
+    Get:2 http://ports.ubuntu.com/ubuntu-ports mantic-updates InRelease [109 kB]
     Hit:3 http://ports.ubuntu.com/ubuntu-ports mantic-backports InRelease
     Hit:4 http://ports.ubuntu.com/ubuntu-ports mantic-security InRelease
+    Fetched 109 kB in 5s (20.1 kB/s)
     Reading package lists... Done
     Building dependency tree... Done
     Reading state information... Done

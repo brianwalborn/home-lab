@@ -55,7 +55,7 @@ Now that our primary node is mostly set up, we need to set up each of our worker
     ```
 3. Back on the primary node, give the worker node a label
     ```
-    me@zero:~$ kubectl label nodes two kubernetes.io/role=worker
+    me@zero:~$ kubectl label nodes one kubernetes.io/role=worker
     ```
 4. Follow these steps for each worker node
 
@@ -83,7 +83,7 @@ We've now got Kubernetes up and running on our primary and worker nodes! Now let
     ```
 2. Run the below commands to 1) create a local user that authenticates using the key and cert from our K3s cluster, 2) set the cluster server for the context to the home network-facing IP address of our primary node, 3) save the context, 4) use the context we just saved, and 5) rename the context to something meaningful.
     ```
-   $ kubectl config set-credentials default --client-key=homelab.key --client-certificate=homelab.crt
+   $ kubectl config set-credentials default --client-key=$HOME/.kube/homelab.key --client-certificate=$HOME/.kube/homelab.crt
    $ kubectl config set-cluster default --insecure-skip-tls-verify=true --server=https://192.168.0.2:6443
    $ kubectl config set-context default --user=default --namespace=default --cluster=default
    $ kubectl config use-context default
