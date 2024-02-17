@@ -49,12 +49,12 @@ Below is the `neofetch` command output for each Raspberry Pi in the cluster
     OS: Ubuntu 23.10 aarch64
     Host: Raspberry Pi 4 Model B Rev 1.5
     Kernel: 6.5.0-1010-raspi
-    Uptime: 1 hour, 22 mins
-    Packages: 746 (dpkg), 4 (snap)
+    Uptime: 1 day, 10 hours, 42 mins
+    Packages: 750 (dpkg), 4 (snap)
     Shell: bash 5.2.15
-    Terminal: /dev/pts/1
+    Terminal: /dev/pts/0
     CPU: BCM2835 (4) @ 1.800GHz
-    Memory: 205MiB / 3790MiB
+    Memory: 841MiB / 3790MiB
     ```
 - Worker node (`one`):
     ```
@@ -62,13 +62,13 @@ Below is the `neofetch` command output for each Raspberry Pi in the cluster
     ------
     OS: Ubuntu 23.10 aarch64
     Host: Raspberry Pi 4 Model B Rev 1.5
-    Kernel: 6.5.0-1005-raspi
-    Uptime: 2 hours, 30 mins
+    Kernel: 6.5.0-1010-raspi
+    Uptime: 1 day, 10 hours, 43 mins
     Packages: 732 (dpkg), 4 (snap)
     Shell: bash 5.2.15
     Terminal: /dev/pts/0
     CPU: BCM2835 (4) @ 1.800GHz
-    Memory: 208MiB / 3790MiB
+    Memory: 431MiB / 3790MiB
     ```
 - Worker node (`two`):
     ```
@@ -76,13 +76,13 @@ Below is the `neofetch` command output for each Raspberry Pi in the cluster
     ------
     OS: Ubuntu 23.10 aarch64
     Host: Raspberry Pi 4 Model B Rev 1.5
-    Kernel: 6.5.0-1005-raspi
-    Uptime: 3 hours, 5 mins
+    Kernel: 6.5.0-1010-raspi
+    Uptime: 1 day, 10 hours, 43 mins
     Packages: 732 (dpkg), 4 (snap)
     Shell: bash 5.2.15
     Terminal: /dev/pts/0
     CPU: BCM2835 (4) @ 1.800GHz
-    Memory: 192MiB / 3790MiB
+    Memory: 356MiB / 3790MiB
     ```
 - Worker node (`three`):
     ```
@@ -90,11 +90,11 @@ Below is the `neofetch` command output for each Raspberry Pi in the cluster
     --------
     OS: Ubuntu 23.10 armv7l
     Host: Raspberry Pi 2 Model B Rev 1.1
-    Kernel: 6.5.0-1008-raspi
-    Uptime: 7 days, 13 hours, 21 mins
+    Kernel: 6.5.0-1010-raspi
+    Uptime: 1 day, 10 hours, 45 mins
     Packages: 722 (dpkg), 4 (snap)
     Shell: bash 5.2.15
     Terminal: /dev/pts/0
     CPU: BCM2835 (4) @ 900MHz
-    Memory: 268MiB / 918MiB
+    Memory: 216MiB / 918MiB
     ```
