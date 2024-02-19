@@ -24,3 +24,15 @@ During K3s installation, we disabled the default ingress controller (`--disable 
     ingress-nginx   ingress-nginx-controller-admission   ClusterIP      10.43.249.51   <none>        443/TCP                      7d5h
     ingress-nginx   ingress-nginx-controller             LoadBalancer   10.43.144.53   10.4.4.10     80:31408/TCP,443:31249/TCP   7d5h
     ```
+    To further verify, we can use `curl` to ensure the controller is listening
+    ```
+    me@zero:~$ curl 10.4.4.10
+    <html>
+    <head><title>404 Not Found</title></head>
+    <body>
+    <center><h1>404 Not Found</h1></center>
+    <hr><center>nginx</center>
+    </body>
+    </html>
+    ```
+    A 404 tells us the controller is up and listening but there are no services up to forward requests to. This is OK at this point.

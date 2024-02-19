@@ -25,3 +25,4 @@ I've only worked with Kubernetes in a Cloud environment, which means I've not ha
 6. [Use public key authentication for worker node access](./05-ssh-public-key-authentication.md)
 7. [Turn your Pi cluster into a Kubernetes cluster](./06-kubernetes-cluster.md)
 8. [Install Metal LB](./07-metallb.md)
+9. [Install the NGINX ingress controller](./08-ingress-nginx.md)
