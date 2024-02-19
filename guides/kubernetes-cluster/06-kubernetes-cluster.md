@@ -40,7 +40,7 @@ When it comes to lightweight Kubernetes distributions, there are many to choose 
 
 Now that our primary node is mostly set up, we need to set up each of our worker nodes.
 
-1. As with the primary, create the `k3s` directory and `kubelet.config` file
+1. As with the primary, create the `k3s` directory and `kubelet.config` file on the worker node
     ```
     me@one:~$ sudo mkdir -p /etc/rancher/k3s/
     me@one:~$ sudo vi /etc/rancher/k3s/kubelet.config

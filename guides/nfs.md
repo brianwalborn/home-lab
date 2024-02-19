@@ -1,8 +1,8 @@
-# Set up a Cluster NFS Server
+# Set up NFS
 
 ## Motivation
 
-To allow all nodes in the cluster to have access to a shared pool of storage, I want to set up one of the nodes in the cluster to be a network file system (NFS) server using an external hard drive.
+To allow nodes in a network to have access to a shared pool of storage, I want to set up a node to be a network file system (NFS) server using an external hard drive.
 
 ## Attach and Format the Drive
 
@@ -32,7 +32,7 @@ We first need to connect and set up the drive. Any external hard drive should do
     me@zero:~$ sudo mount /dev/sda1 /drives/external00
     ```
 
-## Install and Configure nfs-kernel-server and Worker Nodes
+## Install and Configure nfs-kernel-server and Clients
 
 1. To install the `nfs-kernel-server` software, run the below command
     ```
@@ -45,9 +45,10 @@ We first need to connect and set up the drive. Any external hard drive should do
     /drives/external00 *(rw,async,no_subtree_check,no_root_squash)
     me@zero:~$ sudo exportfs -a
     ```
-2. On the worker node(s), install `nfs-common` to be able to access the shared drive and mount the shared drive to the system
+2. On the client node(s), install `nfs-common` to be able to access the shared drive and mount the shared drive to the system
     ```
     me@one:~$ sudo apt install nfs-common
     me@one:~$ sudo mkdir -p /shared/external00
     me@one:~$ sudo mount zero.local:/drives/external00 /shared/external00/
     ```
+    > In lieu of the hostname (`zero.local`), you can also use the IP address of the NFS server
