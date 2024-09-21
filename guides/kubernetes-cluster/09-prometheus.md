@@ -15,7 +15,7 @@
     $ kubectl create ns prometheus
     $ helm -n prometheus upgrade -i prometheus prometheus-community/prometheus
     ```
-2. To see everything that the chart installed, run `kubectl -n prometheus get all`:
+2. To see everything that the chart installed, run `kubectl -n prometheus get all`
     ```
     $ kubectl -n prometheus get all
     NAME                                                     READY   STATUS    RESTARTS      AGE
@@ -52,7 +52,8 @@
     NAME                                       READY   AGE
     statefulset.apps/prometheus-alertmanager   1/1     2d1h
     ```
-3. To access the Prometheus dashboard, we can forward the service to a port on our local machine and access it through a brower:
+    > Note that we can pick and choose what we want to install by [configuring options](https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus#configuration) in a Helm values file, but that's outside of the scope of this guide
+3. To access the Prometheus dashboard, we can forward the service to a port on our local machine and access it through a browser
     ```
     $ kubectl -n prometheus port-forward service/prometheus-server 8080:80
     ```
