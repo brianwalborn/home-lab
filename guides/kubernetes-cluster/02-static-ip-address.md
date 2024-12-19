@@ -68,7 +68,7 @@ We'll be using [Netplan](https://netplan.io/) to assign a static IP to our Pi --
     ```
     > This may break your connection with the Pi but the configuration will still apply
 
-    Now, when running `ip addr`, you should see the static IP address reflected on the interface with the interface renamed to the `set-name` from the configuration
+    Now, when running `ip addr`, you should see the static IP address reflected on the interface with the interface renamed to the `set-name` from the configuration. If not, run `sudo reboot`.
     ```
     me@zero:~$ ip addr
     ...
