@@ -10,3 +10,7 @@
 - 1x [Samsung 870 EVO SATA III SSD, 1 TB](https://www.amazon.com/SAMSUNG-Inch-Internal-MZ-77E1T0B-AM/dp/B08QBJ2YMG)
 - 4x [Monoprice Cat6 Ethernet Patch Cable, 0.5'](https://www.amazon.com/Monoprice-Cat6-Ethernet-Patch-Cable/dp/B01C68CVDC)
 - 1x [Utronics Raspberry Pi Cluster Case](https://www.amazon.com/UCTRONICS-Upgraded-Enclosure-Raspberry-Compatible/dp/B09S11Q684)
+
+## Architecture
+
+_TODO_

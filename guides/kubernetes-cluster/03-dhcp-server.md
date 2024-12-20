@@ -49,7 +49,7 @@ For the same reason that we gave the Pi's connection to our home network a stati
     me@zero:~$ sudo netplan generate
     me@zero:~$ sudo netplan apply
     ```
-    Now, when running `ip addr`, you should see the static IP address reflected on the `eth0` interface
+    Now, when running `ip addr`, you should see the static IP address reflected on the `eth0` interface.
     ```
     me@zero:~$ ip addr
     ...
@@ -101,7 +101,7 @@ The first thing to be aware of is to not add a second DHCP server to your home n
     ```
     The above configuration results in the DHCP server listening for new clients on `eth0`, the Pi's on-board ethernet port. Each new client that gets connected will receive an IP address from the range `10.4.4.2` to `10.4.4.50`. If the client doesn't ask for a specific timeframe on its lease, the lease time will be `86400` seconds (24 hours) since I won't have a lot of different devices coming and going from the network. The server will also advise clients to use `10.4.4.1` as the default gateway.
     > I'm also setting `match-client-id` to `false` because I had two nodes with the same `client_id` which was causing them to be assigned the same IP address. This is defaulted to `true` and likely won't need to be changed. You can read more about it [here](https://kea.readthedocs.io/en/kea-1.6.1/arm/dhcp4-srv.html#using-client-identifier-and-hardware-address).
-3. To update the configuration, run `systemctl restart kea-dhcp4-server`.
+3. To update the configuration, run `sudo systemctl restart kea-dhcp4-server`.
 4. If the Pi that this instruction set was ran on is plugged into an unmanaged switch, any additional nodes connected to the switch will receive an IP address within the specified `10.4.4.2` to `10.4.4.50` range and will show up in the `kea-leases4.csv` file
     ```
     me@zero:~$ cat /var/lib/kea/kea-leases4.csv
