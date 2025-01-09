@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 # to use, on the target machine (only tested on Ubuntu Server 24.10):
-# wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/add-scripts/guides/kubernetes-cluster/scripts/primary-setup.sh
+# wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/main/guides/kubernetes-cluster/scripts/primary-setup.sh
 # sudo chmod +x primary-setup.sh
+# edit script variables
 # sudo ./primary-setup.sh
 
 # # # variables
@@ -96,6 +97,24 @@ sudo curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/
 sudo dpkg -i cloudflared.deb &&
 sudo cloudflared service install $CLOUDFLARE_TOKEN
 echo "Follow these instructions to finish setting up tunneled SSH access: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-infrastructure-access"
+
+# # # 05. k3s/helm set up
+
+k3s_config="apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+shutdownGracePeriod: 30s
+shutdownGracePeriodCriticalPods: 10s"
+k3s_token=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32; echo)
+
+sudo mkdir -p /etc/rancher/k3s/
+sudo echo "$k3s_config" > /etc/rancher/k3s/kubelet.config
+curl -sfL https://get.k3s.io | K3S_TOKEN="$k3s_token" sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+sudo chmod 700 get_helm.sh
+sudo ./get_helm.sh
+sudo rm get_helm.sh
+sudo mkdir $HOME/.kube
+sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
 
 echo "Rebooting..."
 sudo reboot
