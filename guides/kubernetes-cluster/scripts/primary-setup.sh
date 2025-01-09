@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-# to use, on the target machine (only tested on Ubuntu Server 24.10):
-# wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/main/guides/kubernetes-cluster/scripts/primary-setup.sh
-# sudo chmod +x primary-setup.sh
-# edit script variables
-# sudo ./primary-setup.sh
+# steps
+# on the target machine (only tested on Ubuntu Server 24.10 & 24.04.1):
+# 1. wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/main/guides/kubernetes-cluster/scripts/primary-setup.sh
+# 2. sudo chmod +x primary-setup.sh
+# 3. edit script variables
+# 4. sudo ./primary-setup.sh
 
 # # # variables
 CLOUDFLARE_TOKEN="FILL TOKEN HERE"
@@ -115,6 +116,10 @@ sudo ./get_helm.sh
 sudo rm get_helm.sh
 sudo mkdir $HOME/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
+
+# # # 06. create ssh key
+
+ssh-keygen -t rsa -f $HOME/.ssh/id_rsa -q -N ""
 
 echo "Rebooting..."
 sudo reboot
