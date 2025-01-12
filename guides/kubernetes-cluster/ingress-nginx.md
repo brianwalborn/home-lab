@@ -8,14 +8,14 @@ During K3s installation, we disabled the default ingress controller (`--disable 
 
 1. Add and update the Helm repo, create the `ingress-nginx` namespace, and install the chart using this values file, updating the load balancer IP as necessary (if you've followed this guide to a T, the IP address won't need to be changed)
     ```
-    me@zero:~$ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-    me@zero:~$ helm repo update
-    me@zero:~$ kubectl create namespace ingress-nginx
-    me@zero:~$ helm -n ingress-nginx install ingress-nginx ingress-nginx/ingress-nginx -f guides/kubernetes-cluster/helm-values/ingress-nginx.yaml
+    me@kubernetes-primary:~$ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+    me@kubernetes-primary:~$ helm repo update
+    me@kubernetes-primary:~$ kubectl create namespace ingress-nginx
+    me@kubernetes-primary:~$ helm -n ingress-nginx install ingress-nginx ingress-nginx/ingress-nginx -f guides/kubernetes-cluster/helm-values/ingress-nginx.yaml
     ```
 2. We should then be able to see the ingress controller `LoadBalancer` service running with the external IP we provided
     ```
-    me@zero:~$ kubectl get services --all-namespaces
+    me@kubernetes-primary:~$ kubectl get services --all-namespaces
     NAMESPACE       NAME                                 TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
     default         kubernetes                           ClusterIP      10.43.0.1      <none>        443/TCP                      7d12h
     kube-system     kube-dns                             ClusterIP      10.43.0.10     <none>        53/UDP,53/TCP,9153/TCP       7d12h
@@ -26,7 +26,7 @@ During K3s installation, we disabled the default ingress controller (`--disable 
     ```
     To further verify, we can use `curl` to ensure the controller is listening
     ```
-    me@zero:~$ curl 10.4.4.10
+    me@kubernetes-primary:~$ curl 10.4.4.10
     <html>
     <head><title>404 Not Found</title></head>
     <body>

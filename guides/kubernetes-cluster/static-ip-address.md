@@ -8,7 +8,7 @@ Assigning a static IP address to your Raspberry Pi has many advantages, but it a
 
 Unless you've attached additional network interfaces to your Pi, you'll see three interfaces available when you run [`ip addr`](https://manpages.ubuntu.com/manpages/mantic/en/man8/ip.8.html): `lo` (loopback), `eth0` (on-board ethernet port), and, if wi-fi is set up, `wlan0` (wireless). If you have something like a [USB to ethernet adapter](https://www.amazon.com/USB-Ethernet-Adapter-Gigabit-Switch/dp/B09GRL3VCN) plugged in, you may see an another interface such as `enx7cc2c6497350`.
 ```
-me@zero:~$ ip addr
+me@kubernetes-primary:~$ ip addr
 1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
     link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
     inet 127.0.0.1/8 scope host lo
@@ -34,13 +34,13 @@ We'll be using [Netplan](https://netplan.io/) to assign a static IP to our Pi --
 
 1. Double-check Netplan configurations in `/run/netplan`, `/etc/netplan`, and `/lib/netplan` to ensure there are no existing configurations conflicting with the interface you're planning on using.
     ```
-    me@zero:~$ sudo su -
-    root@zero:~# cat /run/netplan/* /etc/netplan/* /lib/netplan/*
+    me@kubernetes-primary:~$ sudo su -
+    root@kubernetes-primary:~# cat /run/netplan/* /etc/netplan/* /lib/netplan/*
     ```
 2. Create a superceding Netplan file
     > Using `80-static-ip.yaml` here simply as a subsequently processed configuration to the `50-cloud-init.yaml` that already existed on my system.
     ```
-    me@zero:~$ sudo vi /etc/netplan/80-static-ip.yaml
+    me@kubernetes-primary:~$ sudo vi /etc/netplan/80-static-ip.yaml
     ```
     and add the following configuration, replacing the interface with your chosen interface name (`eth0`, `wlan0`, etc.) and making any other updates directed by the comments
     ```
@@ -62,15 +62,15 @@ We'll be using [Netplan](https://netplan.io/) to assign a static IP to our Pi --
     ```
 3. Apply the configuration by running
     ```
-    me@zero:~$ sudo chmod 600 /etc/netplan/80-static-ip.yaml
-    me@zero:~$ sudo netplan generate
-    me@zero:~$ sudo netplan apply
+    me@kubernetes-primary:~$ sudo chmod 600 /etc/netplan/80-static-ip.yaml
+    me@kubernetes-primary:~$ sudo netplan generate
+    me@kubernetes-primary:~$ sudo netplan apply
     ```
     > This may break your connection with the Pi but the configuration will still apply
 
     Now, when running `ip addr`, you should see the static IP address reflected on the interface with the interface renamed to the `set-name` from the configuration. If not, run `sudo reboot`.
     ```
-    me@zero:~$ ip addr
+    me@kubernetes-primary:~$ ip addr
     ...
     3: wlan0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
       link/ether d8:3a:dd:3c:74:5d brd ff:ff:ff:ff:ff:ff
@@ -86,8 +86,12 @@ We'll be using [Netplan](https://netplan.io/) to assign a static IP to our Pi --
     ```
 5. We can now SSH into our Pi with it's new IP address from our home network
     ```
-    brianwalborn home-lab (main) λ ssh me@192.168.0.2
+    brianwalborn $ ssh me@192.168.0.2
     me@192.168.0.2's password:
     Welcome to Ubuntu 23.10 (GNU/Linux 6.5.0-1005-raspi aarch64)
     ...
     ```
+
+## Net Step
+
+- [Turn your control-plane node into a DHCP server for your cluster](./dhcp-server.md)

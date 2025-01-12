@@ -1,3 +1,0 @@
-service:
-  spec:
-    loadBalancerIP: 10.4.4.10

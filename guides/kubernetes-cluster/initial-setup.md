@@ -15,7 +15,7 @@ I use the Raspberry Pi Imager to install Ubuntu Server onto a [Micro SD card](ht
 1. Fire up the Imager, connect the Micro SD card to your machine, and click through. Most of it is pretty self-explanitory, but here are some notes:
 
     - Ubuntu Server will be under *Other general-purpose OS*
-    - After clicking *Next* for the first time, you'll have the option to set advanced settings. I generally set up a hostname, username and password, wireless LAN (for servers that won't be bridged, in other words: only the primary node of a cluster), and enable SSH via password authentication.
+    - After clicking *Next* for the first time, you'll have the option to set advanced settings. I generally set up a hostname, username and password, wireless LAN (for servers that won't be bridged, in other words: only the control-plane node of a Kubernetes cluster), and enable SSH via password authentication.
 2. Once it's done pushing the OS to the Micro SD card, remove the card from your machine, plug it into the Pi, and power it up.
 
 ## Connecting to the Pi and Initial Setup
@@ -33,3 +33,8 @@ I use the Raspberry Pi Imager to install Ubuntu Server onto a [Micro SD card](ht
 3. That's it! Your Pi is ready to be hacked on.
 
 > If you're building a cluster of multiple Pis, this guide can be followed for each one but note that the `sudo apt update` and `sudo apt upgrade` commands won't work on the worker nodes unless a) you've set up a wireless LAN when imaging the OS or b) you've followed the [Internet gateway guide](./internet-gateway.md) to give the worker node Internet access.
+
+## Next Step
+
+- If this setup was just completed on the conrtol-plane node, [assign a static IP address to your control-plane node](./static-ip-address.md)
+- If this setup was just completed on worker node(s), [use public key authentication for worker node access](./ssh-public-key-authentication.md)

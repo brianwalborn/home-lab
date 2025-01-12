@@ -2,7 +2,7 @@
 
 ## Motivation
 
-Since my home lab has a cluster of Raspberry Pis that live on a separate subnet from my home network, I need the primary node of the cluster to act as a DHCP server so it can assign IP addresses to the worker nodes. For this guide to be worthwhile, you'll want to have a [LAN switch](https://www.amazon.com/TP-Link-Compliant-Shielded-Optimization-TL-SG1005P/dp/B076HZFY3F) handy that you'll connect your primary node (DHCP server) to in order to assign IP addresses to worker nodes (clients).
+Since my home lab has a cluster of Raspberry Pis that live on a separate subnet from my home network, I need the control-plane node of the cluster to act as a DHCP server so it can assign IP addresses to the worker nodes. For this guide to be worthwhile, you'll want to have a [LAN switch](https://www.amazon.com/TP-Link-Compliant-Shielded-Optimization-TL-SG1005P/dp/B076HZFY3F) handy that you'll connect your control-plane node (DHCP server) to in order to assign IP addresses to worker nodes (clients).
 
 ## Install ISC Kea
 
@@ -10,7 +10,7 @@ There are many different options when it comes to DHCP software that can run on 
 
 1. Running the below command will install a few packages: `kea-dhcp4-server` (what we'll primarily be working with), `kea-dhcp6-server`, `kea-ctrl-agent` (a REST API service for Kea), and `kea-dhcp-ddns-server`. We'll also want to install Postgres for DHCP lease storage.
     ```
-    me@zero:~$ sudo apt install kea
+    me@kubernetes-primary:~$ sudo apt install kea
     ```
 2. Select OK then `configured_random_password` at the prompt which will be used to authenticate with the `kea-ctrl-agent` API service. The password is stored in `/etc/kea/kea-api-password` -- to change it, run `dpkg-reconfigure kea-ctrl-agent` or simply edit the file manually.
 
@@ -22,7 +22,7 @@ For the same reason that we gave the Pi's connection to our home network a stati
 
 1. Either create or edit the existing `/etc/netplan/80-static-ip.yaml` file to add the `eth0` interface
     ```
-    me@zero:~$ sudo vi /etc/netplan/80-static-ip.yaml
+    me@kubernetes-primary:~$ sudo vi /etc/netplan/80-static-ip.yaml
     network:
       version: 2
       renderer: networkd
@@ -46,12 +46,12 @@ For the same reason that we gave the Pi's connection to our home network a stati
     ```
 2. Apply the configuration by running
     ```
-    me@zero:~$ sudo netplan generate
-    me@zero:~$ sudo netplan apply
+    me@kubernetes-primary:~$ sudo netplan generate
+    me@kubernetes-primary:~$ sudo netplan apply
     ```
     Now, when running `ip addr`, you should see the static IP address reflected on the `eth0` interface.
     ```
-    me@zero:~$ ip addr
+    me@kubernetes-primary:~$ ip addr
     ...
     2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
       link/ether d8:3a:dd:3c:74:5b brd ff:ff:ff:ff:ff:ff
@@ -69,11 +69,11 @@ The first thing to be aware of is to not add a second DHCP server to your home n
 
 1. Before creating our configuration file, we first want to back up the default DHCP4 configuration file provided by Kea so we have something to rollback to in the event things go south.
     ```
-    me@zero:~$ sudo mv /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.backup
+    me@kubernetes-primary:~$ sudo mv /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.backup
     ```
 2. In a new `/etc/kea/kea-dhcp4.conf` file we'll add the following
     ```
-    me@zero:~$ sudo vi /etc/kea/kea-dhcp4.conf
+    me@kubernetes-primary:~$ sudo vi /etc/kea/kea-dhcp4.conf
     {
       "Dhcp4": {
         "interfaces-config": {
@@ -104,7 +104,11 @@ The first thing to be aware of is to not add a second DHCP server to your home n
 3. To update the configuration, run `sudo systemctl restart kea-dhcp4-server`.
 4. If the Pi that this instruction set was ran on is plugged into an unmanaged switch, any additional nodes connected to the switch will receive an IP address within the specified `10.4.4.2` to `10.4.4.50` range and will show up in the `kea-leases4.csv` file
     ```
-    me@zero:~$ cat /var/lib/kea/kea-leases4.csv
+    me@kubernetes-primary:~$ cat /var/lib/kea/kea-leases4.csv
     address,hwaddr,client_id,valid_lifetime,expire,subnet_id,fqdn_fwd,fqdn_rev,hostname,state,user_context
     10.4.4.2,d8:3a:dd:3c:7a:16,ff:f8:ce:1b:a1:00:02:00:00:ab:11:75:ea:8f:29:16:c2:aa:53,600,1702165203,1,0,0,two,0,
     ```
+
+## Next Step
+
+- [Turn your control-plane node into an Internet gateway for your cluster](./internet-gateway.md)
