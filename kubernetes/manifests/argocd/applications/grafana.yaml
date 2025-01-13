@@ -12,6 +12,17 @@ spec:
     - chart: grafana
       repoURL: https://grafana.github.io/helm-charts
       targetRevision: 8.8.2
+      helm:
+        values: |
+          grafana.ini:
+            server:
+              domain: grafana.walborn.cloud
+              serve_from_sub_path: true
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - "grafana.walborn.cloud"
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
