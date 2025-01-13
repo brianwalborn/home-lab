@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: longhorn
+  name: prometheus
   namespace: argocd
 spec:
   syncPolicy:
@@ -9,13 +9,9 @@ spec:
       - CreateNamespace=true
   project: default
   sources:
-    - chart: longhorn
-      repoURL: https://charts.longhorn.io/
-      targetRevision: v1.7.2
-      helm:
-        values: |
-          preUpgradeChecker:
-            jobEnabled: false
+    - chart: prometheus
+      repoURL: https://prometheus-community.github.io/helm-charts/
+      targetRevision: prometheus-26.1.0
   destination:
     server: https://kubernetes.default.svc
-    namespace: longhorn-system
+    namespace: monitoring
