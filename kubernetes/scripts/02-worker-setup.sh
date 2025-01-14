@@ -38,6 +38,7 @@ sudo apt update -y
 sleep 5
 sudo apt upgrade -y
 sudo apt install avahi-daemon -y
+sudo apt install nfs-common -y
 
 # # # 03. k3s setup
 

@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jellyfin
+  namespace: jellyfin
+spec:
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+  project: default
+  sources:
+    - chart: jellyfin
+      repoURL: https://jellyfin.github.io/jellyfin-helm
+      targetRevision: HEAD
+      helm:
+        values: |
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - "media.walborn.cloud"
+          volumeMounts:
+            - name: media
+              mountPath: /media
+          volumes:
+            - name: media
+              nfs:
+                server: 10.0.1.1
+                path: /nfs/default/
+                readOnly: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jellyfin
