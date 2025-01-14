@@ -9,10 +9,6 @@ spec:
     - chart: csi-driver-nfs
       repoURL: https://raw.githubusercontent.com/kubernetes-csi/csi-driver-nfs/master/charts
       targetRevision: v4.8.0
-      helm:
-        values: |
-          controller:
-            runOnControlPlane: true
   destination:
     server: https://kubernetes.default.svc
     namespace: kube-system

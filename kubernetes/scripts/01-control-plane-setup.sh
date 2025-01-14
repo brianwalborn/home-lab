@@ -18,6 +18,7 @@ DHCP_LEASE_LIFETIME="86400"
 HOME_NETWORK_GATEWAY_IP_ADDRESS="192.168.0.1"
 NETWORK_INTERFACE="wlan0"
 CONTROL_PLANE_NODE_HOME_NETWORK_STATIC_IP_ADDRESS="192.168.0.2/24"
+NFS_DRIVES="/nfs/default /nfs/media"
 
 # # # 01. update packages
 
@@ -119,6 +120,16 @@ fi
 # # # 06. create ssh key
 
 ssh-keygen -t rsa -f $HOME/.ssh/id_rsa -q -N ""
+
+# # # 07. nfs server
+
+sudo apt install nfs-kernel-server -y
+
+for drive in $NFS_DRIVES; do 
+    echo "$drive *(ro,async,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+done
+
+sudo exportfs -a
 
 echo "Rebooting..."
 sudo reboot

@@ -28,8 +28,8 @@ We first need to connect and set up the drive. Any external hard drive should do
     > ```
 3. To actually be able to use the drive, we need to first create a mount point, then mount the drive.
     ```
-    me@host:~$ sudo mkdir -p /drives/external00
-    me@host:~$ sudo mount /dev/sda1 /drives/external00
+    me@host:~$ sudo mkdir -p /nfs/default
+    me@host:~$ sudo mount /dev/sda1 /nfs/default
     ```
 
 ## Install and Configure nfs-kernel-server and Clients
@@ -42,12 +42,12 @@ We first need to connect and set up the drive. Any external hard drive should do
     ```
     me@host:~$ sudo vi /etc/exports
     ...
-    /drives/external00 *(rw,async,no_subtree_check,no_root_squash)
+    /nfs/default *(rw,async,no_subtree_check,no_root_squash)
     me@host:~$ sudo exportfs -a
     ```
 2. On the client node(s), install `nfs-common` to be able to access the shared drive and mount the shared drive to the system
     ```
     me@client:~$ sudo apt install nfs-common
-    me@client:~$ sudo mkdir -p /shared/external00
-    me@client:~$ sudo mount <HOST_IP>:/drives/external00 /shared/external00/
+    me@client:~$ sudo mkdir -p /nfs/default
+    me@client:~$ sudo mount <HOST_IP>:/nfs/default /nfs/default/
     ```

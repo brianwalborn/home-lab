@@ -11,23 +11,22 @@ spec:
   sources:
     - chart: jellyfin
       repoURL: https://jellyfin.github.io/jellyfin-helm
-      targetRevision: HEAD
+      targetRevision: 2.1.0
       helm:
         values: |
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            hosts:
-              - "media.walborn.cloud"
+          persistence:
+            media:
+              size: 5Gi
           volumeMounts:
-            - name: media
-              mountPath: /media
+            - name: library
+              mountPath: /library
           volumes:
-            - name: media
+            - name: library
               nfs:
                 server: 10.0.1.1
                 path: /nfs/default/
                 readOnly: true
+
   destination:
     server: https://kubernetes.default.svc
     namespace: jellyfin
