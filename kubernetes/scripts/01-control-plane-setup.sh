@@ -18,7 +18,7 @@ DHCP_LEASE_LIFETIME="86400"
 HOME_NETWORK_GATEWAY_IP_ADDRESS="192.168.0.1"
 NETWORK_INTERFACE="wlan0"
 CONTROL_PLANE_NODE_HOME_NETWORK_STATIC_IP_ADDRESS="192.168.0.2/24"
-NFS_DRIVES="/nfs/default /nfs/media"
+NFS_DRIVES="/nfs/default:rw /nfs/media:ro"
 
 # # # 01. update packages
 
@@ -78,12 +78,12 @@ netplan_config="network:
 
 sudo touch $netplan_file
 sudo chmod 600 $netplan_file
-sudo echo "$netplan_config" > $netplan_file
+echo "$netplan_config" | sudo tee $netplan_file
 sudo netplan generate
 sudo netplan apply
 sudo apt install kea-dhcp4-server -y
 sudo mv $kea_file $kea_file.backup
-sudo echo "$kea_config" > $kea_file
+echo "$kea_config" | sudo tee $kea_file
 sudo systemctl restart kea-dhcp4-server
 
 # # # 03. internet gateway
@@ -103,7 +103,7 @@ shutdownGracePeriodCriticalPods: 10s"
 k3s_token=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32; echo)
 
 sudo mkdir -p /etc/rancher/k3s/
-sudo echo "$k3s_config" > /etc/rancher/k3s/kubelet.config
+echo "$k3s_config" | sudo tee /etc/rancher/k3s/kubelet.config
 curl -sfL https://get.k3s.io | K3S_TOKEN="$k3s_token" sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
 sudo mkdir $HOME/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
@@ -126,7 +126,8 @@ ssh-keygen -t rsa -f $HOME/.ssh/id_rsa -q -N ""
 sudo apt install nfs-kernel-server -y
 
 for drive in $NFS_DRIVES; do 
-    echo "$drive *(ro,async,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+    IFS=: read -r name permission <<< "$drive"
+    echo "$name *($permission,async,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
 done
 
 sudo exportfs -a
