@@ -24,7 +24,7 @@ spec:
             - name: library
               nfs:
                 server: 10.0.1.1
-                path: /nfs/default/
+                path: /nfs/media/
                 readOnly: true
 
   destination:
