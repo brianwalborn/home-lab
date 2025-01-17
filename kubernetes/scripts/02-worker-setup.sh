@@ -3,9 +3,10 @@
 # steps
 # this assumes that the control-plane node's ssh key is already in the worker node's authorized_keys file
 # on the control-plane node of the cluster (only tested on Ubuntu Server 24.10 & 24.04.1):
-# 1. wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/main/kubernetes/scripts/02-worker-setup.sh
-# 2. edit script variables
-# 3. cat worker-setup.sh | ssh <WORKER_IP> /bin/bash
+# 1. (if not already) git clone https://github.com/brianwalborn/home-lab.git
+# 2. cd home-lab/kubernetes/scripts
+# 3. (if not already) fill in 00-variables.sh
+# 4. cat 02-worker-setup.sh | ssh <WORKER_IP_ADDRESS> /bin/bash
 
 . ./00-variables.sh
 

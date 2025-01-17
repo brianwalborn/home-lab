@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-export CLOUDFLARE_TUNNEL_TOKEN="" # if you want cloudflared on the control-plane node, set the tunell token here
-export CLOUDFLARE_CERT_MANAGER_API_TOKEN=""
+export CLOUDFLARE_TUNNEL_TOKEN="" # if you want cloudflared on the control-plane node, set the tunnel token here (ZeroTrust > Networks > Tunnels)
+export CLOUDFLARE_CERT_MANAGER_API_TOKEN="" # instructions are here if you plan to use the dns01 solver through CloudFlare: https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/
 export K3S_TOKEN="" # any random string. if k3s is already installed, pull from /var/lib/rancher/k3s/server/node-token on the control-plane node
 export DOMAIN="example.com" # your domain
 export EMAIL_ADDRESS="email@email.com" # your email address

@@ -2,9 +2,10 @@
 
 # steps
 # on the control-plane node (only tested on Ubuntu Server 24.10 & 24.04.1):
-# 1. wget https://raw.githubusercontent.com/brianwalborn/home-lab/refs/heads/main/kubernetes/scripts/01-control-plane-setup.sh
-# 2. edit variables
-# 3. sudo ./control-plane-setup.sh
+# 1. git clone https://github.com/brianwalborn/home-lab.git
+# 2. cd home-lab/kubernetes/scripts
+# 3. fill in 00-variables.sh
+# 4. sudo ./00-control-plane-setup.sh
 
 . ./00-variables.sh
 
@@ -95,6 +96,7 @@ echo "$k3s_config" | sudo tee /etc/rancher/k3s/kubelet.config
 curl -sfL https://get.k3s.io | K3S_TOKEN="$K3S_TOKEN" sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
 sudo mkdir $HOME/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
+cat /etc/rancher/k3s/k3s.yaml | sudo tee $HOME/.kube/config
 
 # # # 05. cloudflare tunnel set up
 
