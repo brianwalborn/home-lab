@@ -115,7 +115,7 @@ ssh-keygen -t rsa -f $HOME/.ssh/id_rsa -q -N ""
 
 sudo apt install nfs-kernel-server -y
 
-for drive in $NFS_DRIVES; do 
+for drive in $NFS_DRIVES; do
     IFS=: read -r name permission <<< "$drive"
     echo "$name *($permission,async,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
 done
