@@ -7,19 +7,16 @@
 # 2. edit script variables
 # 3. cat worker-setup.sh | ssh <WORKER_IP> /bin/bash
 
-# # # variables
-
-K3S_TOKEN="" # pull from /var/lib/rancher/k3s/server/node-token on the control-plane
-CONTROL_PLANE_NODE_IP="10.0.1.1"
-WORKER_NETWORK_INTERFACE="eth0"
+. ./00-variables.sh
 
 # # # 01. dns config (needed for URLs to resolve)
 
+[[ "$WORKER_NETWORK_INTERFACE" == *"wlan"* ]] && interface_identifier="wifis" || interface_identifier="ethernets"
 netplan_file="/etc/netplan/80-dns-servers.yaml"
 netplan_config="network:
     version: 2
     renderer: networkd
-    ethernets:
+    $interface_identifier:
         $WORKER_NETWORK_INTERFACE:
             nameservers:
                 addresses:
@@ -49,7 +46,7 @@ shutdownGracePeriodCriticalPods: 10s"
 
 sudo mkdir -p /etc/rancher/k3s/
 echo "$k3s_config" | sudo tee /etc/rancher/k3s/kubelet.config
-curl -sfL https://get.k3s.io | K3S_URL="https://$CONTROL_PLANE_NODE_IP:6443" K3S_TOKEN="$K3S_TOKEN" sh -s - --node-label 'node.kubernetes.io/role=worker' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
+curl -sfL https://get.k3s.io | K3S_URL="https://$CONTROL_PLANE_NODE_ETHERNET_STATIC_IP_ADDRESS:6443" K3S_TOKEN="$K3S_TOKEN" sh -s - --node-label 'node.kubernetes.io/role=worker' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-proxy-arg 'metrics-bind-address=0.0.0.0'
 
 echo "Rebooting..."
 sudo reboot

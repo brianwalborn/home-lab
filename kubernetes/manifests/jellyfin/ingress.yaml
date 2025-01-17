@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: media.your.domain
+    - host: media.{{DOMAIN}}
       http:
         paths:
           - path: /
