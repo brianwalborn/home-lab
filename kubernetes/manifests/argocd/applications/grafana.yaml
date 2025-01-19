@@ -23,6 +23,9 @@ spec:
             ingressClassName: nginx
             hosts:
               - "grafana.walborn.cloud"
+          persistence:
+            enabled: true
+            storageClassName: nfs-csi
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
