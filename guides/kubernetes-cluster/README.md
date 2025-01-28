@@ -16,7 +16,9 @@ I've only worked with Kubernetes in a Cloud environment, which means I've not ha
 
 ## Guide
 
-1. [Initial setup of the **controle-plane** node](./initial-setup.md)
+> NOTE: If you'd like to skip setting this all up step-by-step, you can take a leap and use the scripts and manifests in the [kubernetes directory](https://github.com/brianwalborn/home-lab/tree/main/kubernetes) of this repository. Please know that these scripts are tailored to my personal set up, so they may need some TLC to get working for your situration.
+
+1. [Initial setup of the **control-plane** node](./initial-setup.md)
 2. [Assign a static IP address to your control-plane node](./static-ip-address.md)
 3. [Turn your control-plane node into a DHCP server for your cluster](./dhcp-server.md)
 4. [Turn your control-plane node into an Internet gateway for your cluster](./internet-gateway.md)
@@ -28,4 +30,4 @@ I've only worked with Kubernetes in a Cloud environment, which means I've not ha
 
 ## Additional Guides
 - [Prometheus for metric aggregation](./prometheus.md)
-- [Grafana for obeservability](./grafana.md)
+- [Grafana for observability](./grafana.md)

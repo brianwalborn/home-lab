@@ -14,7 +14,7 @@
 sudo apt update -y
 sleep 5
 sudo apt upgrade -y
-sudo apt install net-tools
+sudo apt install net-tools -y
 
 # # # 02. static ips and dhcp server
 
