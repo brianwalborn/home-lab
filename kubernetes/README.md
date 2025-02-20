@@ -10,8 +10,6 @@ These are fast-track scripts and manifests designed to help get a Kubernetes clu
 
 - `argo-cd.sh`: deploys [Argo CD](https://github.com/argoproj/argo-cd) into the cluster (requires `cert-manager` to be deployed, plus a domain if you'd like it to be accessible publicly)
 
-- `cert-manager.sh`: deploys [cert-manager](https://github.com/cert-manager/cert-manager) into the cluster (requires cloudflared to be deployed)
-
-- `cloudflared.sh`: deploys cloudflared into the cluster (requires a [CloudFlare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/))
+- `cert-manager.sh`: deploys [cert-manager](https://github.com/cert-manager/cert-manager) into the cluster (you must have a CloudFlare token [with the correct permissions](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/) in order to use the CloudFlare dns01 solver)
 
 - `ingress-nginx.sh`: deploys the [ingress-nginx](https://github.com/kubernetes/ingress-nginx) Ingress controller into the cluster

@@ -98,20 +98,11 @@ sudo mkdir $HOME/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
 cat /etc/rancher/k3s/k3s.yaml | sudo tee $HOME/.kube/config
 
-# # # 05. cloudflare tunnel set up
-
-if [ "$CLOUDFLARE_TUNNEL_TOKEN" != "" ]; then
-    sudo curl -L --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-arm64.deb &&
-    sudo dpkg -i cloudflared.deb &&
-    sudo cloudflared service install $CLOUDFLARE_TUNNEL_TOKEN
-    echo "Follow these instructions to finish setting up tunneled SSH access: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/use-cases/ssh/ssh-infrastructure-access"
-fi
-
-# # # 06. create ssh key
+# # # 05. create ssh key
 
 ssh-keygen -t rsa -f $HOME/.ssh/id_rsa -q -N ""
 
-# # # 07. nfs server
+# # # 06. nfs server
 
 sudo apt install nfs-kernel-server -y
 
