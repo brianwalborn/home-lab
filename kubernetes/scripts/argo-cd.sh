@@ -4,7 +4,7 @@
 
 MANIFEST_INGRESS="../manifests/argocd/ingress.yaml"
 
-if [[ -f $MANIFEST_INGRESS && -f $MANIFEST_ROOT_APP ]]; then
+if [[ -f $MANIFEST_INGRESS ]]; then
     sed -i -e 's/{{DOMAIN}}/'$DOMAIN'/g' $MANIFEST_INGRESS
 
     kubectl create namespace argocd
@@ -12,5 +12,5 @@ if [[ -f $MANIFEST_INGRESS && -f $MANIFEST_ROOT_APP ]]; then
     kubectl -n argocd apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     kubectl -n argocd apply -f $MANIFEST_INGRESS
 else
-    echo "$MANIFEST_INGRESS or $MANIFEST_ROOT_APP not found. Make sure you're in the ./kubernetes/scripts directory."
+    echo "$MANIFEST_INGRESS not found. Make sure you're in the ./kubernetes/scripts directory."
 fi

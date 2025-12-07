@@ -79,6 +79,7 @@ sudo systemctl restart kea-dhcp4-server
 # # # 03. internet gateway
 
 sudo sed -i 's/#\s*\(net.ipv4.ip_forward=1\)/\1/' /etc/sysctl.conf
+sudo sed -i 's/#\s*\(net.ipv6.conf.all.forwarding=1\)/\1/' /etc/sysctl.conf
 sudo iptables -t nat -A POSTROUTING -s $CLUSTER_SUBNET -o $NETWORK_INTERFACE -j MASQUERADE
 echo iptables-persistent iptables-persistent/autosave_v4 boolean true | sudo debconf-set-selections
 echo iptables-persistent iptables-persistent/autosave_v6 boolean true | sudo debconf-set-selections
@@ -93,7 +94,7 @@ shutdownGracePeriodCriticalPods: 10s"
 
 sudo mkdir -p /etc/rancher/k3s/
 echo "$k3s_config" | sudo tee /etc/rancher/k3s/kubelet.config
-curl -sfL https://get.k3s.io | K3S_TOKEN="$K3S_TOKEN" sh -s - server --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
+curl -sfL https://get.k3s.io | K3S_TOKEN="$K3S_TOKEN" sh -s - server --cluster-init --write-kubeconfig-mode '0644' --node-taint 'node-role.kubernetes.io/master=true:NoSchedule' --disable 'servicelb' --disable 'traefik' --disable 'local-path' --kube-controller-manager-arg 'bind-address=0.0.0.0' --kube-proxy-arg 'metrics-bind-address=0.0.0.0' --kube-scheduler-arg 'bind-address=0.0.0.0' --kubelet-arg 'config=/etc/rancher/k3s/kubelet.config' --kube-controller-manager-arg 'terminated-pod-gc-threshold=10'
 sudo mkdir $HOME/.kube
 sudo cp /etc/rancher/k3s/k3s.yaml $HOME/.kube/.
 cat /etc/rancher/k3s/k3s.yaml | sudo tee $HOME/.kube/config
@@ -112,6 +113,10 @@ for drive in $NFS_DRIVES; do
 done
 
 sudo exportfs -a
+
+# # # 07. Tailscale
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up --advertise-routes=192.168.0.0/24
 
 echo "Rebooting..."
 sudo reboot
